@@ -7,7 +7,7 @@ This project is an AI assistant that helps students with their studies. It is a 
 - [Trần Nguyễn Xuân Sơn (Lovell)](https://facebook.com/profile.php?id=100074728315651)
 - [Đổng Quốc Thái (qt15)](https://facebook.com/profile.php?id=100013997764866)
 - [Trung Nguyên](https://facebook.com/DTrungNguyenIT/)
-- [Nguyễn Hoàng Long (belongkawaii)]([https://facebook.com/DTrungNguyenIT/](https://web.facebook.com/nguyen.hoang.329992))
+- [Nguyễn Hoàng Long (belongkawaii)]([https://facebook.com/DTrungNguyenIT/](https://web.facebook.com/nguyen.hoang.329992)
 
 ## Features
 - Generate responses to user queries using the OpenAI API
