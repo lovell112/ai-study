@@ -1,0 +1,73 @@
+<div class="page-header">
+    <div class="header-wrapper row m-0">
+        <div class="header-logo-wrapper col-auto p-0">
+            <div class="logo-wrapper">
+                <a href="/home">
+                    <img class="img-fluid img-logo for-light" src="/assets/img/vani-logo.png" alt="">
+                    <img class="img-fluid img-logo for-dark" src="/assets/img/vani-logo.png" alt="">
+                </a>
+            </div>
+            <div class="toggle-sidebar">
+                <svg class="sidebar-toggle">
+                    <use href="/assets/svg/icon-sprite.svg#stroke-animation"></use>
+                </svg>
+            </div>
+        </div>
+        <div class="nav-right col-xl-12 col-lg-12 col-auto pull-right right-header p-0">
+            <ul class="nav-menus">
+
+                <li>
+                    <div class="mode">
+                        <svg class="for-dark">
+                            <use href="/assets/svg/icon-sprite.svg#moon"></use>
+                        </svg>
+                        <svg class="for-light">
+                            <use href="/assets/svg/icon-sprite.svg#Sun"></use>
+                        </svg>
+                    </div>
+                </li>
+                <li class="profile-nav onhover-dropdown pe-0 py-0">
+                    <div class="d-flex align-items-center profile-media">
+                        <img class="img-30 b-r-10"
+                            src="{{user.avatar}}"
+                            alt="User Avatar"
+                            onerror="this.onerror=null; this.src='/assets/images/avatars/default.png';">
+                        <div class="flex-grow-1 user">
+                            <span>
+                                {{#if username}}
+                                    {{username}}
+                                {{else}}
+                                    {{#if user.username}}
+                                        {{user.username}}
+                                    {{else}}
+                                        User
+                                    {{/if}}
+                                {{/if}}
+                            </span>
+                        </div>
+                    </div>
+                    <ul class="profile-dropdown onhover-show-div">
+                        <li>
+                            <a href="/profile/{{user.username}}">
+                                <i class="fal fa-user fs-6 lh-sm me-2"></i>
+                                <span>Hồ sơ</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/settings">
+                                <i class="fal fa-cog fs-6 lh-sm me-2"></i>
+                                <span>Cài đặt</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" data-action="logout">
+                                <i class="fal fa-sign-out-alt fs-6 lh-sm me-2"></i>
+                                <span>Đăng xuất</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

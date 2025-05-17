@@ -1,0 +1,213 @@
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="row pb-sm-4 pt-sm-4">
+            <div class="col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div class="model-select">
+                            <select class="form-select" id="modelSelect" aria-label="Select AI Model">
+                                <option value="cohere-command">Cohere Command</option>
+                                <option value="gemini-pro" selected>Google Gemini</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-outline-secondary btn-sm" id="clearChatBtn">
+                            <i class="fas fa-trash-alt"></i> Clear Chat
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="chat-hero text-center py-5" id="welcomeHero" style="min-height: 75vh; overflow-y: auto;">
+                            <img src="/assets/img/vani.png" alt="AI Assistant" class="mb-4 rounded-circle"
+                                style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #4e73df; box-shadow: 0 0 15px rgba(78, 115, 223, 0.7);">
+                            <h2 class="mb-4">AI Learning Assistant</h2>
+                            <p class="lead mb-5">Hãy hỏi tôi bất cứ điều gì để giúp cho việc học tập của bạn!</p>
+                        </div>
+                        <div class="chat-container d-none" id="chatContainer"
+                            style="min-height: 75vh; overflow-y: auto;">
+                        </div>
+                        <div class="chat-input mt-3">
+                            <form id="chatForm">
+                                <input type="hidden" id="currentChatId" value="">
+                                <div class="input-group">
+                                    <textarea type="text" class="form-control bg-light"
+                                            placeholder="Hỏi trợ lý AI về vấn đề học tập của bạn..." id="messageInput"
+                                            rows="1" style="resize: none;"></textarea>
+                                    <button type="submit" class="btn btn-primary" id="sendButton">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let chatHistory = [];
+    let currentChatId = '';
+    const chatContainer = document.getElementById('chatContainer');
+    const welcomeHero = document.getElementById('welcomeHero');
+    
+    document.getElementById('chatForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        
+        const messageInput = document.getElementById('messageInput');
+        const message = messageInput.value.trim();
+        const modelSelect = document.getElementById('modelSelect');
+        const selectedModel = modelSelect.value;
+        
+        if (message) {
+            if (!welcomeHero.classList.contains('d-none')) {
+                welcomeHero.classList.add('d-none');
+                chatContainer.classList.remove('d-none');
+            }
+            
+            chatContainer.innerHTML += `
+                <div class="d-flex flex-row-reverse mb-3">
+                    <div class="rounded-circle bg-secondary text-white p-2 ms-2 d-none d-sm-flex" 
+                         style="width: 40px; height: 40px; align-items: center; justify-content: center;">
+                        Me
+                    </div>
+                    <div class="p-2 bg-primary text-white rounded" style="max-width: 80%;">
+                        <p class="mb-0">${message}</p>
+                    </div>
+                </div>
+            `;
+            
+            messageInput.value = '';
+            
+            const thinkingId = Date.now();
+            chatContainer.innerHTML += `
+                <div class="d-flex mb-3" id="thinking-${thinkingId}">
+                    <div class="rounded-circle p-2 me-2 d-none d-sm-flex" 
+                         style="width: 40px; height: 40px; align-items: center; justify-content: center; overflow: hidden; border: 3px solid #4e73df;">
+                        <img src="/assets/img/vani.png" alt="AI" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="p-2 bg-light text-dark rounded" style="max-width: 80%;">
+                        <p class="mb-0"><i class="fas fa-spinner fa-spin"></i> Thinking...</p>
+                    </div>
+                </div>
+            `;
+            
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            messageInput.disabled = true;
+            document.getElementById('sendButton').disabled = true;
+            
+            try {
+                const response = await fetch('/api/ai/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        model: selectedModel,
+                        chatId: currentChatId 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                const thinkingElement = document.getElementById(`thinking-${thinkingId}`);
+                if (thinkingElement) {
+                    thinkingElement.remove();
+                }
+                
+                messageInput.disabled = false;
+                document.getElementById('sendButton').disabled = false;
+                messageInput.focus();
+                
+                if (data.success) {
+                    if (data.data.chatId) {
+                        currentChatId = data.data.chatId;
+                        document.getElementById('currentChatId').value = currentChatId;
+                    }
+                    
+                    chatContainer.innerHTML += `
+                        <div class="d-flex mb-3">
+                            <div class="rounded-circle p-2 me-2 d-none d-sm-flex" 
+                                 style="width: 40px; height: 40px; align-items: center; justify-content: center; overflow: hidden; border: 3px solid #4e73df;">
+                                <img src="/assets/img/vani.png" alt="AI" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <div class="p-2 bg-light text-dark rounded" style="max-width: 80%;">
+                                <p class="mb-0">${formatResponse(data.data.text)}</p>
+                                <small class="text-muted">Powered by ${data.data.model}</small>
+                            </div>
+                        </div>
+                    `;
+                    
+                    chatHistory.push({
+                        role: 'user',
+                        content: message
+                    });
+                    
+                    chatHistory.push({
+                        role: 'assistant',
+                        content: data.data.text
+                    });
+                } else {
+                    chatContainer.innerHTML += `
+                        <div class="d-flex mb-3">
+                            <div class="rounded-circle bg-danger p-2 me-2 d-none d-sm-flex" 
+                                 style="width: 40px; height: 40px; align-items: center; justify-content: center;">
+                                !
+                            </div>
+                            <div class="p-2 bg-light text-danger rounded" style="max-width: 80%;">
+                                <p class="mb-0">Error: ${data.message || 'Failed to generate response'}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            } catch (error) {
+                console.error('Error:', error);
+                
+                const thinkingElement = document.getElementById(`thinking-${thinkingId}`);
+                if (thinkingElement) {
+                    thinkingElement.remove();
+                }
+                
+                messageInput.disabled = false;
+                document.getElementById('sendButton').disabled = false;
+                
+                chatContainer.innerHTML += `
+                    <div class="d-flex mb-3">
+                        <div class="rounded-circle bg-danger p-2 me-2 d-none d-sm-flex" 
+                             style="width: 40px; height: 40px; align-items: center; justify-content: center;">
+                            !
+                        </div>
+                        <div class="p-2 bg-light text-danger rounded" style="max-width: 80%;">
+                            <p class="mb-0">Error: Could not connect to AI service</p>
+                        </div>
+                    </div>
+                `;
+                
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        }
+    });
+    
+    function formatResponse(text) {
+        if (!text) return '';
+        let formatted = text.replace(/\n/g, '<br>');
+        formatted = formatted.replace(/```([a-z]*)\n([\s\S]*?)\n```/g, '<pre class="bg-dark text-light p-2"><code>$2</code></pre>');
+        formatted = formatted.replace(/`([^`]+)`/g, '<code class="bg-dark text-light px-1">$1</code>');
+        formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        formatted = formatted.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+        return formatted;
+    }
+    document.getElementById('clearChatBtn').addEventListener('click', function() {
+        if (confirm('Bạn có chắc chắn muốn xóa lịch sử trò chuyện không?')) {
+            welcomeHero.classList.remove('d-none');
+            chatContainer.classList.add('d-none');
+            chatContainer.innerHTML = '';
+            chatHistory = [];
+            currentChatId = '';
+            document.getElementById('currentChatId').value = '';
+        }
+    });
+</script>

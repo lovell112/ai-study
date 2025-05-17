@@ -1,0 +1,743 @@
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="row justify-content-center pb-sm-4 pt-sm-4">
+            <div class="col-lg-12">
+                <h2 class="text-primary mb-4">Cài đặt tài khoản</h2>
+            </div>
+            <div class="col-lg-4 col-xxl-3 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body p-2">
+                        <ul class="nav nav-tabs nav-pills border-0 flex-row flex-md-column mb-md-0 fs-6" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link text-start w-100 active" id="info-tab" data-bs-toggle="tab"
+                                    data-bs-target="#info" type="button" role="tab" aria-controls="info"
+                                    aria-selected="true">
+                                    <i class="fal fa-user pe-2"></i> Thông tin cá nhân
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link text-start w-100" id="avatar-tab" data-bs-toggle="tab"
+                                    data-bs-target="#avatar" type="button" role="tab" aria-controls="avatar"
+                                    aria-selected="false">
+                                    <i class="fal fa-user-circle pe-2"></i> Ảnh đại diện
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link text-start w-100" id="activity-tab" data-bs-toggle="tab"
+                                    data-bs-target="#activity" type="button" role="tab" aria-controls="activity"
+                                    aria-selected="false">
+                                    <i class="fal fa-clock pe-2"></i> Hoạt động
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link text-start w-100" id="security-tab" data-bs-toggle="tab"
+                                    data-bs-target="#security" type="button" role="tab" aria-controls="security"
+                                    aria-selected="false">
+                                    <i class="fal fa-shield-alt pe-2"></i> Bảo mật
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card shadow-sm mt-4 d-none d-lg-block">
+                    <div class="card-body text-center">
+                        <div class="d-flex justify-content-center mb-3 position-relative">
+                            {{#if user.avatar}}
+                            <img src="{{user.avatar}}" id="user-avatar" alt="{{user.name}}" class="rounded-circle"
+                                style="width: 80px; height: 80px; object-fit: cover;">
+                            {{else}}
+                            <div id="user-avatar"
+                                class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white"
+                                style="width: 80px; height: 80px; font-size: 2rem; font-weight: bold;">
+                                <span class="user-avatar">{{user.name.[0]}}</span>
+                            </div>
+                            {{/if}}
+                            <div class="avatar-edit-overlay position-absolute" style="display: none;">
+                                <button class="btn btn-sm btn-light rounded-circle" id="change-avatar-btn"
+                                    data-bs-toggle="modal" data-bs-target="#avatarModal">
+                                    <i class="fal fa-camera text-white"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <h5 class="mb-1 user-name-display">{{user.name}}</h5>
+                        <p class="text-muted mb-0 user-info-display" data-field="email">{{user.email}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8 col-xxl-9">
+                <div class="tab-content" id="v-tabs-tabContent">
+                    <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-header bg-white">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-primary me-3"
+                                        style="width: 40px; height: 40px;">
+                                        <i class="fal fa-user text-white fs-4"></i>
+                                    </div>
+                                    <h5 class="mb-0">Thông tin cá nhân</h5>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div>
+                                            <label class="form-label text-muted">Họ và tên</label>
+                                            <p class="fw-semibold mb-0 user-info-display" data-field="name">
+                                                {{user.name}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div>
+                                            <label class="form-label text-muted">Tên đăng nhập</label>
+                                            <p class="fw-semibold mb-0 user-info-display" data-field="username">
+                                                {{user.username}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div>
+                                            <label class="form-label text-muted">Email</label>
+                                            <p class="fw-semibold mb-0 user-info-display" data-field="email">
+                                                {{user.email}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div>
+                                            <label class="form-label text-muted">Số điện thoại</label>
+                                            <p class="fw-semibold mb-0 user-info-display" data-field="phone">
+                                                {{user.phone}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-header bg-white">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-success me-3"
+                                        style="width: 40px; height: 40px;">
+                                        <i class="fal fa-edit text-white fs-4"></i>
+                                    </div>
+                                    <h5 class="mb-0">Cập nhật thông tin cá nhân</h5>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <form action="/api/user/update-profile" method="POST">
+                                    <div class="alert rounded mb-3" style="display: none;"></div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-medium" for="name">Họ và tên</label>
+                                                <input type="text" class="form-control" id="name" name="name"
+                                                    value="{{user.name}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-medium" for="username">Tên đăng nhập</label>
+                                                <input type="text" class="form-control" id="username" name="username"
+                                                    value="{{user.username}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-medium" for="email">Email</label>
+                                                <input type="email" class="form-control" id="email" name="email"
+                                                    value="{{user.email}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-medium" for="phone">Số điện thoại</label>
+                                                <input type="text" class="form-control" id="phone" name="phone"
+                                                    value="{{user.phone}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <button type="submit" class="btn btn-primary px-4" id="update-profile-btn">
+                                                <span class="spinner-border spinner-border-sm d-none" role="status"
+                                                    aria-hidden="true"></span>
+                                                Cập nhật thông tin
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="avatar" role="tabpanel" aria-labelledby="avatar-tab">
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header bg-white">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-purple bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-purple me-3"
+                                        style="width: 40px; height: 40px; background-color: rgba(111, 66, 193, 0.1);">
+                                        <i class="fal fa-user-circle text-purple fs-4" style="color: #6f42c1;"></i>
+                                    </div>
+                                    <h5 class="mb-0">Ảnh đại diện</h5>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 text-center mb-4">
+                                        <div class="d-flex flex-column align-items-center">
+                                            {{#if user.avatar}}
+                                            <img src="{{user.avatar}}" alt="{{user.name}}"
+                                                class="img-fluid rounded-circle mb-3 avatar-preview"
+                                                style="width: 150px; height: 150px; object-fit: cover;">
+                                            {{else}}
+                                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white mb-3 avatar-preview"
+                                                style="width: 150px; height: 150px; font-size: 4rem; font-weight: bold;">
+                                                <span>{{user.name.[0]}}</span>
+                                            </div>
+                                            {{/if}}
+                                            <button class="btn btn-primary mt-2 mb-3 w-100 w-sm-auto"
+                                                data-bs-toggle="modal" data-bs-target="#avatarModal">
+                                                <i class="fal fa-camera me-2"></i> Thay đổi avatar
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="alert alert-info">
+                                            <h6 class="text-white"><i class="fal fa-info-circle me-2"></i> Về ảnh đại diện</h6>
+                                            <p class="mb-0 small">Bạn có thể tải lên ảnh của riêng mình hoặc sử dụng ảnh
+                                                đại diện được tạo tự động từ tên của bạn.
+                                                Chúng tôi hỗ trợ tải lên các định dạng JPG, PNG và WebP với kích thước
+                                                tối đa là 5MB.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="activity" role="tabpanel" aria-labelledby="activity-tab">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-info me-3"
+                                        style="width: 40px; height: 40px;">
+                                        <i class="fal fa-history text-white fs-4"></i>
+                                    </div>
+                                    <h5 class="mb-0">Lịch sử hoạt động</h5>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="activity-history-table" class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th data-sort="0" class="cursor-pointer">#</th>
+                                                <th data-sort="1" class="cursor-pointer">Hoạt động</th>
+                                                <th data-sort="2" class="cursor-pointer">Chi tiết</th>
+                                                <th data-sort="3" class="cursor-pointer">Thời gian</th>
+                                                <th data-sort="4" class="cursor-pointer">Trạng thái</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div id="activity-pagination" class="mt-4">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="security-tab">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-warning me-3"
+                                        style="width: 40px; height: 40px;">
+                                        <i class="fal fa-shield-alt text-white fs-4"></i>
+                                    </div>
+                                    <h5 class="mb-0">Đổi mật khẩu</h5>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <form action="/api/user/change-password" method="POST">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label fw-medium" for="currentPassword">Mật khẩu hiện
+                                                    tại</label>
+                                                <input type="password" class="form-control" id="currentPassword"
+                                                    name="currentPassword">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label fw-medium" for="newPassword">Mật khẩu
+                                                    mới</label>
+                                                <input type="password" class="form-control" id="newPassword"
+                                                    name="newPassword">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group mb-3 position-relative">
+                                                <label class="form-label fw-medium" for="confirmPassword">Xác nhận mật
+                                                    khẩu mới</label>
+                                                <input type="password" class="form-control" id="confirmPassword"
+                                                    name="confirmPassword">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <button type="submit" class="btn btn-primary px-4" id="change-password-btn">
+                                                <span class="spinner-border spinner-border-sm d-none" role="status"
+                                                    aria-hidden="true"></span>
+                                                Đổi mật khẩu
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="avatarModalLabel">Thay đổi ảnh đại diện</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert rounded mb-3" id="avatar-alert" style="display: none;"></div>
+                
+                <div class="text-center mb-4">
+                    {{#if user.avatar}}
+                        <img src="{{user.avatar}}" id="avatar-preview" alt="Avatar" class="img-fluid rounded-circle mb-3"
+                            style="width: 120px; height: 120px; object-fit: cover;">
+                    {{else}}
+                        <div id="avatar-preview" class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white mx-auto mb-3"
+                            style="width: 120px; height: 120px; font-size: 3rem; font-weight: bold;">
+                            <span>{{user.name.[0]}}</span>
+                        </div>
+                    {{/if}}
+                </div>
+                
+                <ul class="nav nav-tabs nav-fill mb-3" id="avatarTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link d-flex justify-content-center align-items-center" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" 
+                            type="button" role="tab" aria-controls="upload" aria-selected="true">
+                            <i class="fal fa-upload me-2"></i> <span>Tải lên</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active d-flex justify-content-center align-items-center" id="default-tab" data-bs-toggle="tab" data-bs-target="#default" 
+                            type="button" role="tab" aria-controls="default" aria-selected="false">
+                            <i class="fal fa-image me-2"></i> <span>Mặc định</span>
+                        </button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content" id="avatarTabContent">
+                    <div class="tab-pane fade show active" id="default" role="tabpanel" aria-labelledby="default-tab">
+                        <p class="">Avatar mặc định sẽ được tạo từ tên của bạn.</p>
+                        <div class="d-grid">
+                            <button id="generate-default-avatar" class="btn btn-primary">
+                                <i class="fal fa-sync me-2"></i> Tạo avatar mặc định
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="upload" role="tabpanel" aria-labelledby="upload-tab">
+                        <p class="">Tải lên ảnh đại diện của riêng bạn.</p>
+                        <form id="avatar-upload-form" enctype="multipart/form-data">
+                            <div id="avatar-upload-container" class="mb-3">
+                                <div class="text-center mb-3">
+                                    <div id="avatar-preview-upload" class="position-relative mx-auto" style="width: 150px; height: 150px;">
+                                        <div id="avatar-upload-placeholder" class="rounded-circle bg-light d-flex align-items-center justify-content-center position-absolute top-0 start-0 w-100 h-100"
+                                            style="border: 2px dashed #adb5bd;">
+                                            <i class="fal fa-cloud-upload-alt fa-3x text-secondary"></i>
+                                        </div>
+                                        <div id="avatar-upload-preview" class="rounded-circle position-absolute top-0 start-0 w-100 h-100" style="display: none; overflow: hidden;">
+                                            <img id="avatar-upload-image" src="#" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="file" class="form-control" id="avatar-upload-input" name="avatar" accept="image/jpeg,image/png,image/webp">
+                                    <button class="btn btn-danger" type="button" id="avatar-upload-clear">Xóa</button>
+                                </div>
+                                <div class="small mb-2">
+                                    Chỉ chấp nhận định dạng JPG, PNG, WebP. Kích thước tối đa 5MB.
+                                </div>
+                                
+                                <div class="alert alert-danger d-none" id="avatar-upload-error"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" id="save-avatar" class="btn btn-primary">
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    Lưu thay đổi
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const hash = window.location.hash;
+        if (hash) {
+            const tab = document.querySelector(`[data-bs-target="${hash}"]`);
+            if (tab) {
+                new bootstrap.Tab(tab).show();
+            }
+        }
+        document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
+            tab.addEventListener('shown.bs.tab', e => {
+                const target = e.target.getAttribute('data-bs-target');
+                history.replaceState(null, null, target);
+            });
+        });
+        let currentAvatarType = 'default';
+        let selectedFile = null;
+        const avatarContainer = document.querySelector('.d-flex.justify-content-center.position-relative');
+        const avatarOverlay = document.querySelector('.avatar-edit-overlay');
+        
+        if (avatarContainer && avatarOverlay) {
+            avatarContainer.addEventListener('mouseenter', () => {
+                avatarOverlay.style.display = 'flex';
+            });
+            
+            avatarContainer.addEventListener('mouseleave', () => {
+                avatarOverlay.style.display = 'none';
+            });
+        }
+        document.getElementById('generate-default-avatar')?.addEventListener('click', function() {
+            currentAvatarType = 'default';
+            updatePreviewAvatar(currentAvatarType);
+        });
+        document.getElementById('avatar-upload-input')?.addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+                showUploadError('Kích thước file quá lớn (tối đa 5MB)');
+                this.value = '';
+                return;
+            }
+            const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+            if (!validTypes.includes(file.type)) {
+                showUploadError('Định dạng file không hỗ trợ (chỉ chấp nhận JPG, PNG, WebP)');
+                this.value = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatar-upload-placeholder').style.display = 'none';
+                document.getElementById('avatar-upload-preview').style.display = 'block';
+                document.getElementById('avatar-upload-image').src = e.target.result;
+                const previewElement = document.getElementById('avatar-preview');
+                if (previewElement.tagName === 'IMG') {
+                    previewElement.src = e.target.result;
+                } else {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.id = 'avatar-preview';
+                    img.alt = 'Avatar';
+                    img.className = 'img-fluid rounded-circle mb-3';
+                    img.style = 'width: 120px; height: 120px; object-fit: cover;';
+                    previewElement.parentNode.replaceChild(img, previewElement);
+                }
+            };
+            reader.readAsDataURL(file);
+            
+            selectedFile = file;
+            currentAvatarType = 'upload';
+            hideUploadError();
+        });
+        document.getElementById('avatar-upload-clear')?.addEventListener('click', function() {
+            document.getElementById('avatar-upload-input').value = '';
+            document.getElementById('avatar-upload-placeholder').style.display = 'flex';
+            document.getElementById('avatar-upload-preview').style.display = 'none';
+            selectedFile = null;
+            hideUploadError();
+        });
+        document.querySelectorAll('#avatarTab button[data-bs-toggle="tab"]').forEach(function(button) {
+            button.addEventListener('shown.bs.tab', function(e) {
+                if (e.target.id === 'upload-tab') {
+                    currentAvatarType = 'upload';
+                } else if (e.target.id === 'default-tab') {
+                    currentAvatarType = 'default';
+                }
+            });
+        });
+        const uploadPlaceholder = document.getElementById('avatar-upload-placeholder');
+        if (uploadPlaceholder) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadPlaceholder.addEventListener(eventName, preventDefault, false);
+            });
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadPlaceholder.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadPlaceholder.addEventListener(eventName, unhighlight, false);
+            });
+            
+            uploadPlaceholder.addEventListener('drop', handleDrop, false);
+            
+            uploadPlaceholder.addEventListener('click', function() {
+                document.getElementById('avatar-upload-input').click();
+            });
+        }
+        
+        function preventDefault(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        function highlight() {
+            uploadPlaceholder.style.backgroundColor = '#e9ecef';
+            uploadPlaceholder.style.borderColor = '#007bff';
+        }
+        
+        function unhighlight() {
+            uploadPlaceholder.style.backgroundColor = '';
+            uploadPlaceholder.style.borderColor = '';
+        }
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const file = dt.files[0];
+            if (file) {
+                const input = document.getElementById('avatar-upload-input');
+                input.files = dt.files;
+                input.dispatchEvent(new Event('change'));
+            }
+        }
+        function showUploadError(message) {
+            const errorElement = document.getElementById('avatar-upload-error');
+            errorElement.textContent = message;
+            errorElement.classList.remove('d-none');
+        }
+        function hideUploadError() {
+            const errorElement = document.getElementById('avatar-upload-error');
+            errorElement.classList.add('d-none');
+        }
+        function updatePreviewAvatar(type) {
+            const previewElement = document.getElementById('avatar-preview');
+            const userName = "{{user.name}}";
+            if (!previewElement) return;
+            if (type === 'default') {
+                const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=random&color=fff&size=128`;
+                
+                if (previewElement.tagName === 'IMG') {
+                    previewElement.src = avatarUrl;
+                } else {
+                    const img = document.createElement('img');
+                    img.src = avatarUrl;
+                    img.id = 'avatar-preview';
+                    img.alt = 'Avatar';
+                    img.className = 'img-fluid rounded-circle mb-3';
+                    img.style = 'width: 120px; height: 120px; object-fit: cover;';
+                    previewElement.parentNode.replaceChild(img, previewElement);
+                }
+            }
+        }
+        document.getElementById('save-avatar')?.addEventListener('click', function() {
+            const button = this;
+            const spinner = button.querySelector('.spinner-border');
+            button.disabled = true;
+            spinner.classList.remove('d-none');
+            
+            const alertElement = document.getElementById('avatar-alert');
+            alertElement.style.display = 'none';
+            
+            if (currentAvatarType === 'upload' && selectedFile) {
+                const formData = new FormData();
+                formData.append('avatar', selectedFile);
+                
+                fetch('/api/user/update-avatar', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('jwt_token')
+                    },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(handleResponse)
+                .catch(handleError);
+            } else if (currentAvatarType === 'default') {
+                fetch('/api/user/update-avatar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('jwt_token')
+                    },
+                    body: JSON.stringify({ avatarType: 'default' })
+                })
+                .then(res => res.json())
+                .then(handleResponse)
+                .catch(handleError);
+            }
+            
+            function handleResponse(data) {
+                button.disabled = false;
+                spinner.classList.add('d-none');
+                
+                if (data.success) {
+                    updateAllAvatars(data.user.avatar);
+                    sessionStorage.setItem('user_avatar', data.user.avatar);
+                    try {
+                        const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+                        userData.avatar = data.user.avatar;
+                        localStorage.setItem('user_data', JSON.stringify(userData));
+                    } catch (err) {
+                        console.error('Error updating localStorage avatar:', err);
+                    }
+                    alertElement.className = 'alert alert-success';
+                    alertElement.textContent = 'Cập nhật ảnh đại diện thành công!';
+                    alertElement.style.display = 'block';
+                    setTimeout(() => {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('avatarModal'));
+                        if (modal) modal.hide();
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 500);
+                    }, 1500);
+                    
+                    if (window.flashMessage) {
+                        window.flashMessage.success('Cập nhật ảnh đại diện thành công!');
+                    }
+                } else {
+                    alertElement.className = 'alert alert-danger';
+                    alertElement.textContent = data.message || 'Có lỗi xảy ra khi cập nhật ảnh đại diện';
+                    alertElement.style.display = 'block';
+                    
+                    if (window.flashMessage) {
+                        window.flashMessage.error(data.message || 'Có lỗi xảy ra khi cập nhật ảnh đại diện');
+                    }
+                }
+            }
+            
+            function handleError(error) {
+                console.error('Error updating avatar:', error);
+                button.disabled = false;
+                spinner.classList.add('d-none');
+                alertElement.className = 'alert alert-danger';
+                alertElement.textContent = 'Không thể kết nối đến máy chủ. Vui lòng thử lại sau.';
+                alertElement.style.display = 'block';
+                
+                if (window.flashMessage) {
+                    window.flashMessage.error('Không thể kết nối đến máy chủ. Vui lòng thử lại sau.');
+                }
+            }
+        });
+        const savedAvatar = sessionStorage.getItem('user_avatar');
+        if (savedAvatar) {
+            updateAllAvatars(savedAvatar);
+        }
+        function updateAllAvatars(avatarUrl) {
+            if (!avatarUrl) return;
+            const sidebarAvatar = document.getElementById('user-avatar');
+            if (sidebarAvatar) {
+                if (sidebarAvatar.tagName === 'IMG') {
+                    sidebarAvatar.src = avatarUrl;
+                } else {
+                    const img = document.createElement('img');
+                    img.src = avatarUrl;
+                    img.id = 'user-avatar';
+                    img.alt = '{{user.name}}';
+                    img.className = 'rounded-circle';
+                    img.style = 'width: 80px; height: 80px; object-fit: cover;';
+                    sidebarAvatar.parentNode.replaceChild(img, sidebarAvatar);
+                }
+            }
+            const avatarPreview = document.querySelector('.avatar-preview');
+            if (avatarPreview) {
+                if (avatarPreview.tagName === 'IMG') {
+                    avatarPreview.src = avatarUrl;
+                } else {
+                    const img = document.createElement('img');
+                    img.src = avatarUrl;
+                    img.alt = '{{user.name}}';
+                    img.className = 'img-fluid rounded-circle mb-3 avatar-preview';
+                    img.style = 'width: 150px; height: 150px; object-fit: cover;';
+                    avatarPreview.parentNode.replaceChild(img, avatarPreview);
+                }
+            }
+            const modalPreview = document.getElementById('avatar-preview');
+            if (modalPreview) {
+                if (modalPreview.tagName === 'IMG') {
+                    modalPreview.src = avatarUrl;
+                } else {
+                    const img = document.createElement('img');
+                    img.src = avatarUrl;
+                    img.id = 'avatar-preview';
+                    img.alt = 'Avatar';
+                    img.className = 'img-fluid rounded-circle mb-3';
+                    img.style = 'width: 120px; height: 120px; object-fit: cover;';
+                    modalPreview.parentNode.replaceChild(img, modalPreview);
+                }
+            }
+            const headerAvatar = document.querySelector('.header-avatar');
+            if (headerAvatar) {
+                if (headerAvatar.tagName === 'IMG') {
+                    headerAvatar.src = avatarUrl;
+                } else {
+                    const img = document.createElement('img');
+                    img.src = avatarUrl;
+                    img.className = 'header-avatar rounded-circle';
+                    img.style = 'width: 32px; height: 32px; object-fit: cover;';
+                    headerAvatar.parentNode.replaceChild(img, headerAvatar);
+                }
+            }
+        }
+    });
+</script>
+<style>
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    th[data-sort] {
+        position: relative;
+    }
+
+    th[data-sort] i {
+        font-size: 0.8em;
+    }
+
+    th.sort-asc,
+    th.sort-desc {
+        background-color: transparent !important;
+    }
+
+    .table> :not(:first-child) {
+        border-top: none;
+    }
+
+    .password-toggle-btn {
+        cursor: pointer;
+    }
+
+    #avatar-upload-placeholder {
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    #avatar-upload-placeholder:hover {
+        background-color: #f8f9fa;
+        border-color: #007bff;
+    }
+    
+    .avatar-edit-overlay {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    .nav-tabs .nav-link.active {
+        font-weight: 500;
+    }
+</style>

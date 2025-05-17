@@ -1,0 +1,78 @@
+<div class="page-body">
+    <div class="container-fluid calendar-basic">
+        <div class="row pb-sm-4 pt-sm-4">
+            <div class="card">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Lịch học tập</h5>
+                    <button class="btn btn-sm btn-primary" id="createEvent">
+                        <i class="fa fa-plus me-1"></i> Thêm sự kiện
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="row" id="wrap">
+                        <div class="col-12">
+                            <div class="calendar-default" id="calendar-container">
+                                <div id="calendar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Modal -->
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">Thêm sự kiện học tập</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="eventForm">
+                    <div class="mb-3">
+                        <label for="eventTitle" class="form-label">Tiêu đề sự kiện</label>
+                        <input type="text" class="form-control" id="eventTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventType" class="form-label">Loại sự kiện</label>
+                        <select class="form-select" id="eventType">
+                            <option value="study-session" selected>Buổi học</option>
+                            <option value="assignment">Bài tập</option>
+                            <option value="exam-prep">Ôn thi</option>
+                            <option value="exam">Kỳ thi</option>
+                            <option value="group-study">Học nhóm</option>
+                            <option value="study-break">Giải lao</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="eventStart" class="form-label">Thời gian bắt đầu</label>
+                            <input type="text" class="form-control flatpickr-date-time" id="eventStart" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="eventEnd" class="form-label">Thời gian kết thúc</label>
+                            <input type="text" class="form-control flatpickr-date-time" id="eventEnd">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventDescription" class="form-label">Mô tả</label>
+                        <textarea class="form-control" id="eventDescription" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="eventAllDay">
+                        <label class="form-check-label" for="eventAllDay">Sự kiện cả ngày</label>
+                    </div>
+                    <input type="hidden" id="eventId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger me-auto" id="deleteEventBtn">Xóa</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-primary" id="saveEventBtn">Lưu sự kiện</button>
+            </div>
+        </div>
+    </div>
+</div>

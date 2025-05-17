@@ -1,0 +1,434 @@
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="row pb-sm-4 pt-sm-4">
+            <div class="col-md-8">
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/home">Trang chủ</a></li>
+                        <li class="breadcrumb-item"><a href="/discussion">Thảo luận</a></li>
+                        <li class="breadcrumb-item"><a href="/discussion/category/{{post.category.slug}}">{{post.category.name}}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{post.title}}</li>
+                    </ol>
+                </nav>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h1 class="card-title fs-2 mb-3">{{post.title}}</h1>
+                        <div class="d-flex align-items-center mb-4">
+                            <img src="{{post.author.avatar}}" class="rounded-circle me-3" width="50" height="50" alt="{{post.author.name}}">
+                            <div>
+                                <h5 class="mb-0"><a href="/profile/{{post.author.username}}" class="text-decoration-none">{{post.author.name}}</a></h5>
+                                <div class="text-muted small">
+                                    <span><i class="fas fa-clock me-1"></i> {{formatDate post.createdAt "DD/MM/YYYY HH:mm"}}</span>
+                                    <span class="ms-3"><i class="fas fa-eye me-1"></i> {{post.views}} lượt xem</span>
+                                </div>
+                            </div>
+                            {{#ifEquals post.author._id user.id}}
+                                <div class="dropdown ms-auto">
+                                    <button class="btn btn-sm btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="/discussion/edit/{{post._id}}"><i class="fas fa-edit me-2"></i>Chỉnh sửa</a></li>
+                                        <li><a class="dropdown-item btn-delete-post" href="#" data-post-id="{{post._id}}"><i class="fas fa-trash-alt me-2"></i>Xóa</a></li>
+                                    </ul>
+                                </div>
+                            {{/ifEquals}}
+                        </div>
+                        <div class="post-content mb-4">
+                            {{{post.content}}}
+                        </div>
+                        
+                        {{#if post.image}}
+                            <div class="post-image mb-4">
+                                <img src="/uploads/posts/{{post.image}}" class="img-fluid rounded" alt="Post image">
+                            </div>
+                        {{/if}}
+                        <div class="post-tags mb-4">
+                            {{#each post.hashtags}}
+                                <a href="/discussion/tag/{{this.name}}" class="badge bg-secondary text-decoration-none me-1 mb-1">
+                                    #{{this.name}}
+                                </a>
+                            {{/each}}
+                        </div>
+                        <div class="post-actions border-top pt-3">
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-sm btn-primary me-2 btn-like-post {{#if post.isLiked}}active{{/if}}" 
+                                        data-post-id="{{post._id}}">
+                                    <i class="{{#if post.isLiked}}fas{{else}}far{{/if}} fa-thumbs-up"></i>
+                                    <span class="likes-count">{{post.likes.length}}</span> Thích
+                                </button>
+                                <button class="btn btn-sm btn-secondary me-2" onclick="document.getElementById('commentSection').scrollIntoView({behavior: 'smooth'})">
+                                    <i class="far fa-comment"></i>
+                                    <span class="comments-count" data-post-id="{{post._id}}">{{post.comments.length}}</span> Bình luận
+                                </button>
+                                <button class="btn btn-sm btn-info me-2 btn-share-post" data-post-id="{{post._id}}">
+                                    <i class="fas fa-share"></i> Chia sẻ
+                                </button>
+                                <button class="btn btn-sm btn-warning me-2" onclick="window.print()">
+                                    <i class="fas fa-print"></i> In
+                                </button>
+                                <button class="btn btn-sm btn-danger report-post" data-post-id="{{post._id}}">
+                                    <i class="fas fa-flag"></i> Báo cáo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <img src="{{post.author.avatar}}" class="rounded-circle me-3" width="64" height="64" alt="{{post.author.name}}">
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1">Tác giả: {{post.author.name}}</h5>
+                                <div>
+                                    {{#ifNotEquals post.author._id user.id}}
+                                        <button class="btn btn-sm {{#if isFollowing}}btn-secondary{{else}}btn-primary{{/if}} btn-follow-user" data-user-id="{{post.author._id}}">
+                                            {{#if isFollowing}}Đang theo dõi{{else}}Theo dõi{{/if}}
+                                        </button>
+                                    {{/ifNotEquals}}
+                                    <a href="/profile/{{post.author.username}}" class="btn btn-sm btn-primary ms-2">Xem hồ sơ</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4" id="commentSection">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Bình luận ({{post.comments.length}})</h5>
+                    </div>
+                    <div class="card-body">
+                        {{#if post.comments}}
+                            {{#each post.comments}}
+                                <div class="comment mb-4">
+                                    <div class="d-flex">
+                                        <img src="{{this.author.avatar}}" class="rounded-circle me-3" width="40" height="40" alt="{{this.author.name}}">
+                                        <div class="flex-grow-1">
+                                            <div class="bg-light p-3 rounded">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <h6 class="mb-0">
+                                                        <a href="/profile/{{this.author.username}}" class="text-decoration-none">
+                                                            {{this.author.name}}
+                                                        </a>
+                                                    </h6>
+                                                    <small class="text-muted">{{formatTimeAgo this.createdAt}}</small>
+                                                </div>
+                                                <div class="comment-content text-muted">
+                                                    {{{this.content}}}
+                                                </div>
+                                                <div class="mt-2">
+                                                    <button class="btn btn-sm btn-link p-0 btn-reply" 
+                                                            data-comment-id="{{this._id}}"
+                                                            data-comment-author="{{this.author.name}}">
+                                                        <i class="far fa-comment"></i> Trả lời
+                                                    </button>
+                                                    {{#if this.isLiked}}
+                                                        <button class="btn btn-sm btn-link p-0 ms-3 btn-like-comment active"
+                                                                data-comment-id="{{this._id}}">
+                                                            <i class="fas fa-heart"></i> <span class="comment-likes-count">{{this.likes.length}}</span>
+                                                        </button>
+                                                    {{else}}
+                                                        <button class="btn btn-sm btn-link p-0 ms-3 btn-like-comment"
+                                                                data-comment-id="{{this._id}}">
+                                                            <i class="far fa-heart"></i> <span class="comment-likes-count">{{this.likes.length}}</span>
+                                                        </button>
+                                                    {{/if}}
+                                                </div>
+                                            </div>
+                                            {{#if this.replies}}
+                                                <div class="replies mt-2 ms-4">
+                                                    {{#each this.replies}}
+                                                        <div class="reply mb-3">
+                                                            <div class="d-flex">
+                                                                <img src="{{this.author.avatar}}" class="rounded-circle me-2" width="30" height="30" alt="{{this.author.name}}">
+                                                                <div class="flex-grow-1">
+                                                                    <div class="bg-light p-2 rounded">
+                                                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                            <h6 class="mb-0 fs-6">
+                                                                                <a href="/profile/{{this.author.username}}" class="text-decoration-none">
+                                                                                    {{this.author.name}}
+                                                                                </a>
+                                                                            </h6>
+                                                                            <small class="text-muted">{{formatTimeAgo this.createdAt}}</small>
+                                                                        </div>
+                                                                        <div class="reply-content text-muted">
+                                                                            {{{this.content}}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {{/each}}
+                                                </div>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        {{else}}
+                            <div class="text-center py-4">
+                                <p class="text-muted">Chưa có bình luận nào. Hãy là người đầu tiên bình luận!</p>
+                            </div>
+                        {{/if}}
+                        <div class="add-comment mt-4">
+                            <h6 class="mb-3">Thêm bình luận của bạn</h6>
+                            <form class="comment-form" data-post-id="{{post._id}}">
+                                <div class="mb-3">
+                                    <textarea class="form-control" id="commentContent" name="commentContent" rows="3" placeholder="Viết bình luận của bạn..."></textarea>
+                                </div>
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-primary">Đăng bình luận</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Thông tin danh mục</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="mb-2">{{post.category.name}}</h6>
+                        <p class="text-muted small mb-2">{{#if post.category.description}}{{post.category.description}}{{else}}Không có mô tả.{{/if}}</p>
+                        <p class="mb-0"><strong>{{post.category.postCount}}</strong> bài đăng trong danh mục này</p>
+                        <a href="/discussion/category/{{post.category.slug}}" class="btn btn-sm btn-primary mt-3">Xem tất cả bài viết</a>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Bài viết liên quan</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        {{#if relatedPosts}}
+                            {{#each relatedPosts}}
+                                <a href="/post/{{this._id}}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between mb-1">
+                                        <h6 class="mb-1">{{this.title}}</h6>
+                                    </div>
+                                    <small class="text-muted">{{formatTimeAgo this.createdAt}} • {{this.comments.length}} bình luận</small>
+                                </a>
+                            {{/each}}
+                        {{else}}
+                            <div class="list-group-item text-center py-3">
+                                <p class="text-muted mb-0">Không có bài viết liên quan</p>
+                            </div>
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Thẻ phổ biến</h5>
+                    </div>
+                    <div class="card-body">
+                        {{#if popularTags}}
+                            {{#each popularTags}}
+                                <a href="/discussion/tag/{{this.name}}" class="badge bg-secondary text-decoration-none me-1 mb-1">#{{this.name}}</a>
+                            {{/each}}
+                        {{else}}
+                            <p class="text-muted mb-0">Không có thẻ phổ biến</p>
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Chia sẻ bài viết</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{currentUrl}}" target="_blank" class="btn btn-primary mx-1" title="Chia sẻ lên Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://twitter.com/intent/tweet?url={{currentUrl}}&text={{post.title}}" target="_blank" class="btn btn-info mx-1" title="Chia sẻ lên Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="mailto:?subject={{post.title}}&body=Xem bài viết này: {{currentUrl}}" class="btn btn-danger mx-1" title="Chia sẻ qua Email">
+                                <i class="far fa-envelope"></i>
+                            </a>
+                            <button class="btn btn-secondary mx-1 btn-copy-link" title="Sao chép liên kết">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="replyCommentModal" tabindex="-1" aria-labelledby="replyCommentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="replyCommentModalLabel">Trả lời bình luận</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Đang trả lời cho <strong id="replyTo"></strong></p>
+                    <form id="replyForm">
+                        <input type="hidden" id="parentCommentId" name="parentCommentId">
+                        <div class="mb-3">
+                            <label for="commentReply" class="form-label">Nội dung trả lời</label>
+                            <textarea class="form-control" id="commentReply" name="content" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="submitReply">Trả lời</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="reportPostModal" tabindex="-1" aria-labelledby="reportPostModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportPostModalLabel">Báo cáo bài viết</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="reportForm">
+                        <input type="hidden" id="reportedPostId" name="postId" value="{{post._id}}">
+                        <div class="mb-3">
+                            <label class="form-label">Lý do báo cáo</label>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="reason" id="reason1" value="inappropriate" checked>
+                                <label class="form-check-label" for="reason1">Nội dung không phù hợp</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="reason" id="reason2" value="spam">
+                                <label class="form-check-label" for="reason2">Spam hoặc quảng cáo</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="reason" id="reason3" value="harassment">
+                                <label class="form-check-label" for="reason3">Quấy rối hoặc bắt nạt</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="reason" id="reason4" value="copyright">
+                                <label class="form-check-label" for="reason4">Vi phạm bản quyền</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="reason" id="reason5" value="other">
+                                <label class="form-check-label" for="reason5">Khác</label>
+                            </div>
+                        </div>
+                        <div class="mb-3" id="otherReasonGroup" style="display: none;">
+                            <label for="otherReason" class="form-label">Nêu rõ lý do</label>
+                            <textarea class="form-control" id="otherReason" name="otherReason" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger" id="submitReport">Báo cáo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/trumbowyg@2.27.3/dist/trumbowyg.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        if (typeof $.fn.trumbowyg === 'undefined') {
+            console.error('Trumbowyg is not loaded');
+        } else {
+            setTimeout(() => {
+                $('#commentContent').trumbowyg({
+                    btns: [['strong', 'em'], ['link'], ['unorderedList', 'orderedList']],
+                    autogrow: true,
+                    removeformatPasted: true
+                });
+            }, 500);
+        }
+        $('.btn-copy-link').on('click', function() {
+            const url = window.location.href;
+            const tempInput = $('<input>');
+            $('body').append(tempInput);
+            tempInput.val(url).select();
+            document.execCommand('copy');
+            tempInput.remove();
+            
+            window.flashMessage.success('URL đã được sao chép vào clipboard');
+        });
+        $('input[name="reason"]').on('change', function() {
+            if ($(this).val() === 'other') {
+                $('#otherReasonGroup').show();
+            } else {
+                $('#otherReasonGroup').hide();
+            }
+        });
+        $('.report-post').on('click', function() {
+            $('#reportPostModal').modal('show');
+        });
+        $('#submitReport').on('click', function() {
+            const postId = $('#reportedPostId').val();
+            const reason = $('input[name="reason"]:checked').val();
+            let details = '';
+            
+            if (reason === 'other') {
+                details = $('#otherReason').val();
+                if (!details) {
+                    window.flashMessage.error('Vui lòng nêu rõ lý do báo cáo');
+                    return;
+                }
+            }
+            $(this).prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang gửi...');
+            
+            axios.post('/discussion/report', { postId, reason, details })
+                .then(response => {
+                    if (response.data.success) {
+                        $('#reportPostModal').modal('hide');
+                        window.flashMessage.success('Báo cáo đã được gửi thành công');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error reporting post:', error);
+                    window.flashMessage.error('Không thể gửi báo cáo');
+                })
+                .finally(() => {
+                    $('#submitReport').prop('disabled', false).text('Báo cáo');
+                });
+        });
+        $('#submitReply').on('click', function() {
+            const commentId = $('#parentCommentId').val();
+            let content = '';
+            if ($.fn.trumbowyg && $('#commentReply').data('trumbowyg')) {
+                content = $('#commentReply').trumbowyg('html');
+            } else {
+                content = $('#commentReply').val();
+            }
+            
+            if (!content || content.trim() === '') {
+                window.flashMessage.error('Vui lòng nhập nội dung phản hồi');
+                return;
+            }
+            $(this).prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang gửi...');
+            
+            axios.post('/discussion/reply-comment', { commentId, content })
+                .then(response => {
+                    if (response.data.success) {
+                        $('#replyCommentModal').modal('hide');
+                        if ($.fn.trumbowyg && $('#commentReply').data('trumbowyg')) {
+                            $('#commentReply').trumbowyg('empty');
+                        } else {
+                            $('#commentReply').val('');
+                        }
+                        window.flashMessage.success('Phản hồi đã được gửi thành công');
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error replying to comment:', error);
+                    window.flashMessage.error('Không thể gửi phản hồi');
+                })
+                .finally(() => {
+                    $('#submitReply').prop('disabled', false).text('Trả lời');
+                });
+        });
+    });
+</script>

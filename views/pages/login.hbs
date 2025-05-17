@@ -1,0 +1,68 @@
+<div class="page-body">
+    <div class="container-fluid p-0">
+        <div class="row m-0">
+            <div class="col-12 p-0">
+                <div class="login-card login-dark">
+                    <div>
+                        <div class="login-main">
+                            <form class="theme-form" action="/api/auth/login" method="post"><input
+                                    type="hidden" name="_token" value="C1K2Kd0vGpGkLofdC8M6n7YWwekuWBuxiw2EqWkx"
+                                    autocomplete="off">
+                                
+                                {{#if loopDetected}}
+                                <div class="alert alert-warning">
+                                  Phát hiện vòng lặp đăng nhập. Hệ thống đã xóa dữ liệu đăng nhập để khắc phục vấn đề.
+                                </div>
+                                {{/if}}
+
+                                {{#if loopFixed}}
+                                <div class="alert alert-success">
+                                  Đã khắc phục vấn đề đăng nhập. Vui lòng đăng nhập lại để tiếp tục.
+                                </div>
+                                {{/if}}
+
+                                {{#if message}}
+                                <div class="alert alert-info">
+                                  {{message}}
+                                </div>
+                                {{/if}}
+
+                                <input type="hidden" name="redirectTo" value="{{redirectTo}}">
+                                <div class="text-center">
+                                    <h3 class="fw-bold">Đăng nhập</h3>
+                                    <p>EduAI - Best AI Assistant for you (Vani Inc.)</p>
+                                </div>
+                                {{!-- <div class="alert bg-light-danger" role="alert">
+                                </div> --}}
+                                <div class="form-group">
+                                    <label class="col-form-label">Tên đăng nhập</label>
+                                    <input class="form-control" type="text" placeholder="Tên đăng nhập" name="username"
+                                        value="">
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-form-label">Mật khẩu</label>
+                                    <input class="form-control" type="password" placeholder="Mật khẩu" name="password"
+                                        value="">
+                                </div>
+                                <div class="form-group mb-0">
+                                    <div class="checkbox p-0">
+                                        <input id="checkbox1" type="checkbox" name="remember" checked>
+                                        <label class="text-muted" for="checkbox1">Ghi nhớ đăng nhập.</label>
+                                    </div>
+                                    <a class="link" href="/reset-password">Quên mật khẩu?</a>
+                                    <div class="text-end mt-3">
+                                        <button class="btn btn-primary btn-block w-100" type="submit">Đăng nhập</button>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <p class="mt-4 mb-0">Bạn chưa có tài khoản? <a
+                                            href="/register">Đăng ký</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

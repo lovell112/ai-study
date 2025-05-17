@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <title>EduAI</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="icon" href="/favicon.ico" type="image/png">
+    <link rel="apple-touch-icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.hassbase.com/plugins/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/icofont.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/themify.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/flag-icon.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/feather-icon.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/calendar.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/slick.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/slick-theme.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/scrollbar.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/animate.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/datatables.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/owlcarousel.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/sweetalert2.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/vendors/flatpickr.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/responsive.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/gh/lelinh014756/fui-toast-js@master/assets/css/toast@1.0.1/fuiToast.min.css">
+    <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+    <style>
+        :root {
+            --theme-default: #0144db
+        }
+
+        .form-control:focus {
+            border-color: var(--theme-default) !important;
+            box-shadow: 0 0 0 0.2rem rgba(1, 68, 219, 0.25) !important;
+        }
+    </style>
+    {{#if success}}
+    <meta name="success-message" content="{{success}}">
+    {{/if}}
+    {{#if error}}
+    <meta name="error-message" content="{{error}}">
+    {{/if}}
+</head>
+
+<body>
+    <div id="fui-toast"></div>
+    <div class="loader-wrapper">
+        <div class="theme-loader">
+            <div class="loader-p"></div>
+        </div>
+    </div>
+    <div class="tap-top"><i data-feather="chevrons-up"></i></div>
+    <div class="page-wrapper compact-wrapper" id="pageWrapper">
+        {{> client/header}}
+        <div class="page-body-wrapper">
+            {{> client/sidebar}}
+{{!-- 
+            {{#if user}}
+            <div class="user-sidebar-info">
+                <div class="user-avatar">
+                    <span class="user-avatar-initial">{{user.name.[0]}}</span>
+                </div>
+                <div class="user-info">
+                    <h6 class="sidebar-user-name">{{user.name}}</h6>
+                    <p class="sidebar-user-email">{{user.email}}</p>
+                </div>
+            </div>
+            {{/if}} --}}
+
+            {{{body}}}
+            {{> client/footer}}
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/assets/js/icons/feather-icon/feather.min.js"></script>
+    <script type="text/javascript" src="/assets/js/icons/feather-icon/feather-icon.js"></script>
+    <script type="text/javascript" src="/assets/js/calendar/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="/assets/js/calendar/fullcalendar-custom.js"></script>
+    <script type="text/javascript" src="/assets/js/scrollbar/simplebar.js"></script>
+    <script type="text/javascript" src="/assets/js/scrollbar/custom.js"></script>
+    <script type="text/javascript" src="/assets/js/sweet-alert/sweetalert.min.js"></script>
+    <script type="text/javascript" src="/assets/js/flatpickr/flatpickr.js"></script>
+    <script type="text/javascript" src="/assets/js/sidebar-menu.js"></script>
+    <script type="text/javascript" src="/assets/js/slick/slick.min.js"></script>
+    <script type="text/javascript" src="/assets/js/slick/slick.js"></script>
+    <script type="text/javascript" src="/assets/js/header-slick.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins.bundle.js"></script>
+    <script type="text/javascript" src="/assets/js/app.js"></script>
+    <script type="text/javascript" src="/assets/js/script.js"></script>
+    <script type="text/javascript" src="/assets/js/custom.js"></script>
+    <script type="text/javascript" src="/assets/js/discussion.js"></script>
+    <script type="text/javascript" src="/assets/js/edit.js"></script>
+    <script type="text/javascript" src="/assets/js/flash-messages.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/gh/lelinh014756/fui-toast-js@master/assets/js/toast@1.0.1/fuiToast.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const currentPath = window.location.pathname;
+
+            $(".sidebar-link").each(function () {
+                const link = $(this);
+                const linkPath = new URL(link.attr("href"), window.location.origin).pathname;
+
+                if (linkPath === currentPath) {
+                    link.addClass("active");
+                }
+            });
+            updateUserInterfaceFromToken();
+        });
+        function updateUserInterfaceFromToken() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    const name = payload.name ? decodeURIComponent(escape(payload.name)) : '';
+                    const email = payload.email ? decodeURIComponent(escape(payload.email)) : '';
+                    const username = payload.username ? decodeURIComponent(escape(payload.username)) : '';
+                    const phone = payload.phone ? decodeURIComponent(escape(payload.phone)) : '';
+                    document.querySelectorAll('.user-name-display, .sidebar-user-name').forEach(el => {
+                        if (el) el.textContent = name;
+                    });
+                    document.querySelectorAll('.user-avatar, .user-avatar-initial').forEach(el => {
+                        if (el) el.textContent = name.charAt(0);
+                    });
+                    document.querySelectorAll('.sidebar-user-email, [data-field="email"]').forEach(el => {
+                        if (el) el.textContent = email;
+                    });
+                    document.querySelector('input[name="name"]')?.setAttribute('value', name);
+                    document.querySelector('input[name="username"]')?.setAttribute('value', username);
+                    document.querySelector('input[name="email"]')?.setAttribute('value', email);
+                    document.querySelector('input[name="phone"]')?.setAttribute('value', phone);
+                    document.querySelectorAll('[data-field="name"]').forEach(el => {
+                        el.textContent = name;
+                    });
+                    document.querySelectorAll('[data-field="username"]').forEach(el => {
+                        el.textContent = username;
+                    });
+                    document.querySelectorAll('[data-field="email"]').forEach(el => {
+                        el.textContent = email;
+                    });
+                    document.querySelectorAll('[data-field="phone"]').forEach(el => {
+                        el.textContent = phone;
+                    });
+
+                } catch (e) {
+                    console.error('Error parsing token:', e);
+                }
+            }
+        }
+        window.addEventListener('storage', function (e) {
+            if (e.key === 'token') {
+                window.location.reload();
+            }
+        });
+        updateUserInterfaceFromToken();
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            if (token) {
+                localStorage.setItem('jwt_token', token);
+                document.cookie = `jwt_token=${token}; path=/; max-age=86400; SameSite=Lax`;
+                const url = new URL(window.location);
+                url.searchParams.delete('token');
+                window.history.replaceState({}, '', url);
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+
+                    if (payload.name) {
+                        const nameElements = document.querySelectorAll('.user-name-display');
+                        nameElements.forEach(el => el.textContent = payload.name);
+
+                        const avatarElements = document.querySelectorAll('.user-avatar-initial');
+                        avatarElements.forEach(el => el.textContent = payload.name[0]);
+                    }
+
+                    if (payload.email) {
+                        const emailElements = document.querySelectorAll('.sidebar-user-email');
+                        emailElements.forEach(el => el.textContent = payload.email);
+                    }
+                } catch (e) {
+                    console.error('Error parsing token:', e);
+                }
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const dropdownButtons = document.querySelectorAll('[data-bs-toggle="dropdown"]');
+            dropdownButtons.forEach(btn => {
+                btn.setAttribute('aria-expanded', 'false');
+                btn.setAttribute('aria-haspopup', 'true');
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const menu = this.nextElementSibling;
+                    if (menu.classList.contains('show')) {
+                        menu.classList.remove('show');
+                        this.setAttribute('aria-expanded', 'false');
+                    } else {
+                        document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
+                            openMenu.classList.remove('show');
+                            openMenu.previousElementSibling.setAttribute('aria-expanded', 'false');
+                        });
+
+                        menu.classList.add('show');
+                        this.setAttribute('aria-expanded', 'true');
+                    }
+                });
+            });
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.dropdown')) {
+                    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                        menu.classList.remove('show');
+                        const button = menu.previousElementSibling;
+                        if (button) button.setAttribute('aria-expanded', 'false');
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

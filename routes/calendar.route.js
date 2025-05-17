@@ -1,0 +1,13 @@
+const express = require('express');
+const router = express.Router();
+const calendarController = require('../controllers/calendar.controller');
+const { protect } = require('../middleware/auth.middleware');
+router.get('/events/range', protect, calendarController.getEventsByDateRange);
+router.get('/events', protect, calendarController.getEvents);
+router.post('/events', protect, calendarController.createEvent);
+router.put('/events/:id', protect, calendarController.updateEvent);
+router.delete('/events/:id', protect, calendarController.deleteEvent);
+router.get('/events/:id', protect, calendarController.getEventById);
+router.post('/events/suggestion', protect, calendarController.createEvent);
+router.get('/stats', protect, calendarController.getEventStats);
+module.exports = router;

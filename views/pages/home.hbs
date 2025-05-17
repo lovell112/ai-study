@@ -1,0 +1,736 @@
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="row pb-sm-4 pt-sm-4">
+            <div class="col-lg-12 mb-3">
+                <div class="card">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="avatar-lg me-3">
+                            <span class="avatar-title rounded-circle bg-soft-primary text-primary fs-1">
+                                <i class="fas fa-user-graduate"></i>
+                            </span>
+                        </div>
+                        <div>
+                            <h2 class="mb-1">Xin chào, {{user.name}} 👋</h2>
+                            <p class="text-muted mb-0">Bạn đã sẵn sàng lên kế hoạch học tập tuần này chưa?</p>
+                        </div>
+                        <div class="ms-auto">
+                            <a href="/calendar" class="btn btn-primary" id="addStudySessionBtn">
+                                <i class="fas fa-plus me-1"></i> Thêm buổi học
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 mb-3">
+                <div class="card">
+                    <div class="card-header custom-border-bottom">
+                        <h5 class="card-title mb-0">Truy cập nhanh</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-3 mb-md-0">
+                                <a href="/ai-chat" class="btn btn-primary w-100 py-2">
+                                    <i class="fas fa-comments me-2"></i> Trò chuyện với AI
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3 mb-md-0">
+                                <a href="/calendar" class="btn btn-info w-100 py-2">
+                                    <i class="fas fa-calendar me-2"></i> Quản lý lịch học
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3 mb-md-0">
+                                <a href="/discussion" class="btn btn-success w-100 py-2">
+                                    <i class="fas fa-comments-alt me-2"></i> Thảo luận
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="/settings" class="btn btn-secondary w-100 py-2">
+                                    <i class="fas fa-cog me-2"></i> Cài đặt
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7 mb-3">
+                <div class="card h-100">
+                    <div class="card-header custom-border-bottom d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Lịch học tuần này</h5>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary me-2" id="prevWeekBtn">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" id="nextWeekBtn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <tbody id="weeklySchedule">
+                                    <tr id="loadingSchedule">
+                                        <td colspan="2" class="text-center py-3">
+                                            <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                                <span class="visually-hidden">Đang tải...</span>
+                                            </div>
+                                            <span class="ms-2">Đang tải lịch học...</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="/calendar" class="btn btn-sm btn-link text-primary">Xem lịch đầy đủ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="card mb-3">
+                    <div class="card-header custom-border-bottom">
+                        <h5 class="card-title mb-0">Lớp học sắp tới</h5>
+                    </div>
+                    <div class="card-body" id="upcomingClassesContainer">
+                        <div id="loadingUpcoming" class="text-center py-3">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                <span class="visually-hidden">Đang tải...</span>
+                            </div>
+                            <span class="ms-2">Đang tải lớp học sắp tới...</span>
+                        </div>
+                        <div id="upcomingClasses"></div>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header bg-light d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h5 class="card-title mb-0">Gợi ý từ AI</h5>
+                        </div>
+                    </div>
+                    <div class="card-body" id="aiSuggestionContainer">
+                        <div id="loadingSuggestion" class="text-center py-3">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                <span class="visually-hidden">Đang tải...</span>
+                            </div>
+                            <span class="ms-2">Đang tạo gợi ý từ AI...</span>
+                        </div>
+                        <div id="aiSuggestionsContent" class="d-none">
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header custom-border-bottom">
+                        <h5 class="card-title mb-0">Trò chuyện gần đây với AI</h5>
+                    </div>
+                    <div class="list-group list-group-flush" id="recentChatsContainer">
+                        <div id="loadingChats" class="text-center py-3">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                <span class="visually-hidden">Đang tải...</span>
+                            </div>
+                            <span class="ms-2">Đang tải trò chuyện gần đây...</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="/histories" class="btn btn-sm btn-link text-primary">Xem tất cả cuộc trò chuyện</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let currentDate = new Date();
+        let currentWeekStart = getWeekStart(currentDate);
+        loadWeeklySchedule(currentWeekStart);
+        loadUpcomingClasses();
+        loadAiSuggestion();
+        loadRecentChats();
+        document.getElementById('prevWeekBtn').addEventListener('click', function () {
+            currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+            loadWeeklySchedule(currentWeekStart);
+        });
+
+        document.getElementById('nextWeekBtn').addEventListener('click', function () {
+            currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+            loadWeeklySchedule(currentWeekStart);
+        });
+        document.getElementById('addStudySessionBtn').addEventListener('click', function (e) {
+        });
+        function getWeekStart(date) {
+            const result = new Date(date);
+            const day = result.getDay();
+            result.setDate(result.getDate() - day + (day === 0 ? -6 : 1)); 
+            result.setHours(0, 0, 0, 0);
+            return result;
+        }
+
+        function formatDate(date) {
+            const options = { weekday: 'long', day: 'numeric', month: 'long' };
+            return new Date(date).toLocaleDateString('vi-VN', options);
+        }
+
+        function formatTime(dateString) {
+            return new Date(dateString).toLocaleTimeString('vi-VN', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function formatTimeRange(start, end) {
+            return `${formatTime(start)} - ${formatTime(end)}`;
+        }
+
+        function getEventColor(type) {
+            const colorMap = {
+                'study-session': 'primary',
+                'assignment': 'info',
+                'exam-prep': 'warning',
+                'exam': 'danger',
+                'group-study': 'success',
+                'study-break': 'secondary'
+            };
+            return colorMap[type] || 'primary';
+        }
+
+        function getEventIcon(type) {
+            const iconMap = {
+                'study-session': 'fa-book',
+                'assignment': 'fa-tasks',
+                'exam-prep': 'fa-file-alt',
+                'exam': 'fa-clipboard-check',
+                'group-study': 'fa-users',
+                'study-break': 'fa-coffee'
+            };
+            return iconMap[type] || 'fa-calendar';
+        }
+
+        function getEventTypeName(type) {
+            const typeMap = {
+                'study-session': 'Buổi học',
+                'assignment': 'Bài tập',
+                'exam-prep': 'Ôn thi',
+                'exam': 'Kỳ thi',
+                'group-study': 'Học nhóm',
+                'study-break': 'Giải lao'
+            };
+            return typeMap[type] || 'Buổi học';
+        }
+        function loadWeeklySchedule(weekStart) {
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+            document.getElementById('weeklySchedule').innerHTML = `
+                <tr id="loadingSchedule">
+                    <td colspan="2" class="text-center py-3">
+                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                            <span class="visually-hidden">Đang tải...</span>
+                        </div>
+                        <span class="ms-2">Đang tải lịch học...</span>
+                    </td>
+                </tr>
+            `;
+            fetch(`/api/calendar/events/range?start=${weekStart.toISOString()}&end=${weekEnd.toISOString()}`)
+                .then(response => response.json())
+                .then(events => {
+                    const eventsByDay = {};
+                    const dayNames = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
+                    dayNames.forEach(day => {
+                        eventsByDay[day] = [];
+                    });
+                    events.forEach(event => {
+                        const eventDate = new Date(event.start);
+                        const dayName = dayNames[eventDate.getDay()];
+                        eventsByDay[dayName].push(event);
+                    });
+                    let scheduleHtml = '';
+
+                    dayNames.forEach((day, index) => {
+                        if (index === 0) return;
+
+                        const dayEvents = eventsByDay[day];
+                        const currentDayDate = new Date(weekStart);
+                        currentDayDate.setDate(weekStart.getDate() + (index === 0 ? 6 : index - 1));
+
+                        scheduleHtml += `<tr>
+                            <td width="100"><span class="fw-bold">${day}</span><br>
+                                <small class="text-muted">${currentDayDate.toLocaleDateString('vi-VN', { day: 'numeric', month: 'numeric' })}</small>
+                            </td>
+                            <td>`;
+
+                        if (dayEvents.length > 0) {
+                            dayEvents.forEach(event => {
+                                const colorClass = getEventColor(event.extendedProps?.type || 'study-session');
+                                scheduleHtml += `
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="flex-shrink-0 me-2">
+                                            <span class="badge bg-soft-${colorClass} text-${colorClass}">${formatTimeRange(event.start, event.end || event.start)}</span>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-0">${event.title}</h6>
+                                            <small class="text-muted">${event.extendedProps?.description || ''}</small>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                        } else {
+                            scheduleHtml += `<span class="text-muted">Không có sự kiện nào</span>`;
+                        }
+
+                        scheduleHtml += `</td></tr>`;
+                    });
+
+                    document.getElementById('weeklySchedule').innerHTML = scheduleHtml;
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải lịch học hàng tuần:', error);
+                    document.getElementById('weeklySchedule').innerHTML = `
+                        <tr>
+                            <td colspan="2" class="text-center text-danger py-3">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                Không thể tải lịch học. Vui lòng làm mới trang.
+                            </td>
+                        </tr>
+                    `;
+                });
+        }
+
+        function loadUpcomingClasses() {
+            document.getElementById('loadingUpcoming').classList.remove('d-none');
+            document.getElementById('upcomingClasses').innerHTML = '';
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const endOfToday = new Date(today);
+            endOfToday.setHours(23, 59, 59, 999);
+            fetch(`/api/calendar/events/range?start=${today.toISOString()}&end=${endOfToday.toISOString()}`)
+                .then(response => response.json())
+                .then(events => {
+                    document.getElementById('loadingUpcoming').classList.add('d-none');
+                    events.sort((a, b) => new Date(a.start) - new Date(b.start));
+                    const now = new Date();
+                    const upcomingEvents = events.filter(event => new Date(event.end || event.start) > now);
+
+                    if (upcomingEvents.length > 0) {
+                        let upcomingHtml = '';
+
+                        upcomingEvents.slice(0, 3).forEach((event, index) => {
+                            const colorClass = getEventColor(event.extendedProps?.type || 'study-session');
+                            const icon = getEventIcon(event.extendedProps?.type || 'study-session');
+                            const borderClass = index < upcomingEvents.length - 1 ? 'border-bottom' : '';
+
+                            upcomingHtml += `
+                                <div class="d-flex align-items-center mb-3 pb-3 ${borderClass}">
+                                    <div class="flex-shrink-0 me-3">
+                                        <div class="avatar avatar-sm bg-soft-${colorClass} text-${colorClass} rounded">
+                                            <span><i class="fas ${icon}"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-0">${event.title}</h6>
+                                        <small class="text-muted">Hôm nay, ${formatTimeRange(event.start, event.end || event.start)}</small>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <a href="/calendar" class="btn btn-sm btn-${colorClass}">Xem</a>
+                                    </div>
+                                </div>
+                            `;
+                        });
+
+                        document.getElementById('upcomingClasses').innerHTML = upcomingHtml;
+                    } else {
+                        document.getElementById('upcomingClasses').innerHTML = `
+                            <div class="text-center text-muted pt-2">
+                                <p>Không có lớp học nào sắp tới hôm nay</p>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải lớp học sắp tới:', error);
+                    document.getElementById('loadingUpcoming').classList.add('d-none');
+                    document.getElementById('upcomingClasses').innerHTML = `
+                        <div class="text-center text-danger py-3">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            Không thể tải lớp học sắp tới.
+                        </div>
+                    `;
+                });
+        }
+
+        function loadAiSuggestion() {
+            document.getElementById('loadingSuggestion').classList.remove('d-none');
+            const suggestionsContent = document.getElementById('aiSuggestionsContent');
+            if (suggestionsContent) {
+                suggestionsContent.classList.add('d-none');
+            }
+            fetch('/api/ai/suggestions')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Lỗi HTTP! Trạng thái: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('loadingSuggestion').classList.add('d-none');
+
+                    if (data.success && data.suggestions && data.suggestions.length > 0) {
+                        const suggestionsContainer = document.getElementById('aiSuggestionsContent');
+                        if (suggestionsContainer) {
+                            suggestionsContainer.classList.remove('d-none');
+                            suggestionsContainer.innerHTML = '';
+                            data.suggestions.forEach((suggestion, index) => {
+                                let priorityClass = '';
+                                switch (suggestion.priority) {
+                                    case 5: priorityClass = 'border-danger'; break;
+                                    case 4: priorityClass = 'border-warning'; break;
+                                    case 3: priorityClass = 'border-info'; break;
+                                    default: priorityClass = 'border-light';
+                                }
+
+                                const suggestionEl = document.createElement('div');
+                                suggestionEl.className = `suggestion-item mb-3 p-3 border ${priorityClass} rounded`;
+                                suggestionEl.innerHTML = `
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-0">${suggestion.title}</h6>
+                                        <small class="text-muted">
+                                            ${new Date(suggestion.start).toLocaleDateString('vi-VN')} • 
+                                            ${formatTimeRange(suggestion.start, suggestion.end)}
+                                        </small>
+                                    </div>
+                                    <div class="ms-2">
+                                        <span class="badge bg-${getPriorityColor(suggestion.priority)}">
+                                            Độ ưu tiên: ${suggestion.priority}/5
+                                        </span>
+                                    </div>
+                                </div>
+                                <p class="mb-2">${suggestion.text}</p>
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-sm btn-outline-secondary me-2 dismiss-suggestion-btn" 
+                                        data-suggestion-id="${suggestion.id}">
+                                        Bỏ qua
+                                    </button>
+                                    <button class="btn btn-sm btn-success add-suggestion-btn"
+                                        data-suggestion-id="${suggestion.id}"
+                                        data-title="${suggestion.title}"
+                                        data-start="${suggestion.start}"
+                                        data-end="${suggestion.end}"
+                                        data-type="${suggestion.type}">
+                                        <i class="fas fa-plus me-1"></i> Thêm vào lịch
+                                    </button>
+                                </div>
+                            `;
+
+                                suggestionsContainer.appendChild(suggestionEl);
+                            });
+                            document.querySelectorAll('.dismiss-suggestion-btn').forEach(btn => {
+                                btn.addEventListener('click', handleDismissSuggestion);
+                            });
+
+                            document.querySelectorAll('.add-suggestion-btn').forEach(btn => {
+                                btn.addEventListener('click', handleAddSuggestionToCalendar);
+                            });
+                        } else {
+                            document.getElementById('aiSuggestionContainer').innerHTML = `
+                                <p class="text-muted text-center">Không có gợi ý nào vào lúc này.</p>
+                            `;
+                        }
+                    } else if (data.success && data.suggestion) {
+                        const container = document.getElementById('aiSuggestionContainer');
+                        container.innerHTML = `
+                            <div class="suggestion-item mb-3 p-3 border border-info rounded">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-0">${data.suggestion.title}</h6>
+                                        <small class="text-muted">
+                                            ${new Date(data.suggestion.start).toLocaleDateString('vi-VN')} • 
+                                            ${formatTimeRange(data.suggestion.start, data.suggestion.end)}
+                                        </small>
+                                    </div>
+                                </div>
+                                <p class="mb-2">${data.suggestion.text}</p>
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-sm btn-outline-secondary me-2" id="dismissSuggestionBtn" 
+                                        data-suggestion-id="${data.suggestion.id}">
+                                        Bỏ qua
+                                    </button>
+                                    <button class="btn btn-sm btn-success" id="addSuggestionBtn"
+                                        data-suggestion-id="${data.suggestion.id}"
+                                        data-title="${data.suggestion.title}"
+                                        data-start="${data.suggestion.start}"
+                                        data-end="${data.suggestion.end}"
+                                        data-type="${data.suggestion.type}">
+                                        <i class="fas fa-plus me-1"></i> Thêm vào lịch
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        document.getElementById('dismissSuggestionBtn').addEventListener('click', function() {
+                            fetch('/api/ai/suggestions/dismiss', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ suggestionId: this.dataset.suggestionId })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    container.innerHTML = '<p class="text-muted text-center">Không có gợi ý nào vào lúc này.</p>';
+                                }
+                            })
+                            .catch(error => console.error('Lỗi khi bỏ qua gợi ý:', error));
+                        });
+                        
+                        document.getElementById('addSuggestionBtn').addEventListener('click', function() {
+                            const suggestionData = {
+                                id: this.dataset.suggestionId,
+                                title: this.dataset.title,
+                                start: this.dataset.start,
+                                end: this.dataset.end,
+                                type: this.dataset.type
+                            };
+                            
+                            fetch('/api/ai/suggestions/add-to-calendar', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(suggestionData)
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    container.innerHTML = '<div class="alert alert-success">Đã thêm buổi học vào lịch thành công!</div>';
+                                    loadUpcomingClasses();
+                                    
+                                    setTimeout(() => {
+                                        container.innerHTML = '<p class="text-muted text-center">Không có gợi ý nào vào lúc này.</p>';
+                                    }, 3000);
+                                }
+                            })
+                            .catch(error => console.error('Lỗi khi thêm gợi ý vào lịch:', error));
+                        });
+                    } else {
+                        document.getElementById('aiSuggestionContainer').innerHTML = `
+                            <p class="text-muted text-center">Không có gợi ý nào vào lúc này.</p>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải gợi ý AI:', error);
+                    document.getElementById('loadingSuggestion').classList.add('d-none');
+                    document.getElementById('aiSuggestionContainer').innerHTML = `
+                        <div class="text-center text-danger py-2">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            Không thể tải gợi ý AI: ${error.message}
+                        </div>
+                    `;
+                });
+        }
+        
+        function loadRecentChats() {
+            const loadingChats = document.getElementById('loadingChats');
+            if (loadingChats) {
+                loadingChats.classList.remove('d-none');
+            }
+            fetch('/api/ai/chats?limit=3')
+                .then(response => response.json())
+                .then(data => {
+                    const loadingElement = document.getElementById('loadingChats');
+                    if (loadingElement) {
+                        loadingElement.remove();
+                    }
+
+                    const container = document.getElementById('recentChatsContainer');
+                    if (!container) return;
+
+                    if (data.success && data.data && data.data.length > 0) {
+                        let chatsHtml = '';
+
+                        data.data.forEach(chat => {
+                            const createdAt = new Date(chat.createdAt);
+                            const timeAgo = getTimeAgo(createdAt);
+
+                            chatsHtml += `
+                                <a href="/history/${chat._id}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">${chat.title}</h6>
+                                        <small>${timeAgo}</small>
+                                    </div>
+                                    <p class="mb-1 text-muted text-truncate">
+                                        ${chat.messages && chat.messages[0] ? chat.messages[0].content.substring(0, 60) + '...' : 'Không có tin nhắn'}
+                                    </p>
+                                </a>
+                            `;
+                        });
+
+                        container.innerHTML = chatsHtml;
+                    } else {
+                        container.innerHTML = `
+                            <div class="list-group-item text-center py-3">
+                                <p class="text-muted mb-0">Không tìm thấy cuộc trò chuyện gần đây.</p>
+                                <a href="/ai-chat" class="btn btn-sm btn-primary mt-2">Bắt đầu cuộc trò chuyện mới</a>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải trò chuyện gần đây:', error);
+                    const loadingElement = document.getElementById('loadingChats');
+                    if (loadingElement) {
+                        loadingElement.remove();
+                    }
+
+                    const container = document.getElementById('recentChatsContainer');
+                    if (container) {
+                        container.innerHTML = `
+                            <div class="list-group-item text-center text-danger py-3">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                Không thể tải trò chuyện gần đây.
+                            </div>
+                        `;
+                    }
+                });
+        }
+
+        function handleDismissSuggestion() {
+            const suggestionId = this.dataset.suggestionId;
+            const suggestionItem = this.closest('.suggestion-item');
+
+            fetch('/api/ai/suggestions/dismiss', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ suggestionId })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        suggestionItem.style.height = suggestionItem.offsetHeight + 'px';
+                        suggestionItem.style.opacity = '0';
+                        suggestionItem.style.transition = 'all 0.3s ease-out';
+
+                        setTimeout(() => {
+                            suggestionItem.style.height = '0px';
+                            suggestionItem.style.padding = '0px';
+                            suggestionItem.style.margin = '0px';
+                            suggestionItem.style.overflow = 'hidden';
+
+                            setTimeout(() => {
+                                suggestionItem.remove();
+                                if (document.querySelectorAll('.suggestion-item').length === 0) {
+                                    const suggestionsContent = document.getElementById('aiSuggestionsContent');
+                                    if (suggestionsContent) {
+                                        suggestionsContent.classList.add('d-none');
+                                    }
+                                    
+                                    const container = document.getElementById('aiSuggestionContainer');
+                                    if (container) {
+                                        container.innerHTML = `
+                                            <p class="text-muted text-center">Không còn gợi ý nào vào lúc này.</p>
+                                        `;
+                                    }
+                                }
+                            }, 300);
+                        }, 100);
+                    }
+                })
+                .catch(error => console.error('Lỗi khi bỏ qua gợi ý:', error));
+        }
+    
+        function handleAddSuggestionToCalendar() {
+            const suggestionData = {
+                id: this.dataset.suggestionId,
+                title: this.dataset.title,
+                start: this.dataset.start,
+                end: this.dataset.end,
+                type: this.dataset.type
+            };
+
+            const suggestionItem = this.closest('.suggestion-item');
+            fetch('/api/ai/suggestions/add-to-calendar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(suggestionData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        suggestionItem.innerHTML = `
+                            <div class="alert alert-success mb-0">
+                                <i class="fas fa-check-circle me-2"></i> 
+                                Đã thêm buổi học vào lịch thành công!
+                            </div>
+                        `;
+                        loadUpcomingClasses();
+                        setTimeout(() => {
+                            suggestionItem.style.height = suggestionItem.offsetHeight + 'px';
+                            suggestionItem.style.opacity = '0';
+                            suggestionItem.style.transition = 'all 0.3s ease-out';
+
+                            setTimeout(() => {
+                                suggestionItem.style.height = '0px';
+                                suggestionItem.style.padding = '0px';
+                                suggestionItem.style.margin = '0px';
+                                suggestionItem.style.overflow = 'hidden';
+
+                                setTimeout(() => {
+                                    suggestionItem.remove();
+                                    if (document.querySelectorAll('.suggestion-item').length === 0) {
+                                        const suggestionsContent = document.getElementById('aiSuggestionsContent');
+                                        if (suggestionsContent) {
+                                            suggestionsContent.classList.add('d-none');
+                                        }
+                                        
+                                        const container = document.getElementById('aiSuggestionContainer');
+                                        if (container) {
+                                            container.innerHTML = `
+                                                <p class="text-muted text-center">Không còn gợi ý nào vào lúc này.</p>
+                                            `;
+                                        }
+                                    }
+                                }, 300);
+                            }, 2000);
+                        }, 1000);
+                    }
+                })
+                .catch(error => console.error('Lỗi khi thêm gợi ý vào lịch:', error));
+        }
+        function getPriorityColor(priority) {
+            switch (priority) {
+                case 5: return 'danger';
+                case 4: return 'warning';
+                case 3: return 'info';
+                case 2: return 'secondary';
+                case 1: return 'light';
+                default: return 'secondary';
+            }
+        }
+        
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+
+            let interval = Math.floor(seconds / 31536000);
+            if (interval > 1) return interval + ' năm trước';
+            if (interval === 1) return '1 năm trước';
+
+            interval = Math.floor(seconds / 2592000);
+            if (interval > 1) return interval + ' tháng trước';
+            if (interval === 1) return '1 tháng trước';
+
+            interval = Math.floor(seconds / 86400);
+            if (interval > 1) return interval + ' ngày trước';
+            if (interval === 1) return '1 ngày trước';
+
+            interval = Math.floor(seconds / 3600);
+            if (interval > 1) return interval + ' giờ trước';
+            if (interval === 1) return '1 giờ trước';
+
+            interval = Math.floor(seconds / 60);
+            if (interval > 1) return interval + ' phút trước';
+            if (interval === 1) return '1 phút trước';
+
+            return 'vừa mới đây';
+        }
+    });
+</script>

@@ -1,0 +1,168 @@
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="row pb-sm-4 pt-sm-4">
+            <div class="col-md-12">
+                <h2 class="text-primary">Kết quả tìm kiếm</h2>
+                <p>Tìm thấy {{count}} kết quả cho "{{query}}"</p>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form id="searchForm" action="/search-results" method="GET">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="q" id="searchQuery" value="{{query}}"
+                                    placeholder="Tìm kiếm bài đăng hoặc người dùng...">
+                                <button class="btn btn-outline-secondary" type="submit">
+                                    <i class="fas fa-search"></i> Tìm kiếm
+                                </button>
+                            </div>
+                            <div class="mt-2">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="type" id="searchPosts"
+                                        value="posts" {{#if (eq type "posts" )}}checked{{/if}}>
+                                    <label class="form-check-label" for="searchPosts">Bài đăng</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="type" id="searchUsers"
+                                        value="users" {{#if (eq type "users" )}}checked{{/if}}>
+                                    <label class="form-check-label" for="searchUsers">Người dùng</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="type" id="searchTags"
+                                        value="tags" {{#if (eq type "tags" )}}checked{{/if}}>
+                                    <label class="form-check-label" for="searchTags">Thẻ</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                {{#if results.length}}
+                {{#if (eq type "posts")}}
+                {{#each results}}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="{{this.author.avatar}}" class="rounded-circle me-2" width="40" height="40"
+                                alt="{{this.author.name}}">
+                            <div>
+                                <h6 class="mb-0">{{this.author.name}}</h6>
+                                <small class="text-muted">{{formatTimeAgo this.createdAt}}</small>
+                            </div>
+                        </div>
+                        <h5><a href="/post/{{this._id}}" class="text-decoration-none">{{this.title}}</a></h5>
+                        <p>{{{truncate this.content 200}}}</p>
+                        <div>
+                            {{#if this.category}}
+                            <span class="badge bg-primary me-1">{{this.category.name}}</span>
+                            {{/if}}
+                            {{#each this.hashtags}}
+                            <a href="/discussion/tag/{{this.name}}"
+                                class="badge bg-secondary text-decoration-none me-1">#{{this.name}}</a>
+                            {{/each}}
+                        </div>
+                        <div class="mt-2">
+                            <small class="text-muted">
+                                <i class="far fa-thumbs-up me-1"></i>{{this.likes.length}} thích
+                                <i class="far fa-comment ms-3 me-1"></i>{{this.comments.length}} bình luận
+                                <i class="far fa-eye ms-3 me-1"></i>{{this.views}} lượt xem
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+                {{else if (eq type "users")}}
+                <div class="row">
+                    {{#each results}}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <img src="{{this.avatar}}" class="rounded-circle mb-3" width="100" height="100"
+                                    alt="{{this.name}}">
+                                <h5 class="card-title">{{this.name}}</h5>
+                                <a href="/profile/{{this.username}}" class="btn btn-sm btn-outline-primary">Xem hồ sơ</a>
+                                <button class="btn btn-sm btn-primary btn-follow-user" data-user-id="{{this._id}}">Theo
+                                    dõi</button>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+                {{else if (eq type "tags")}}
+                <div class="row">
+                    {{#each results}}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">#{{this.name}}</h5>
+                                <p class="card-text">{{this.postCount}} bài viết</p>
+                                <a href="/discussion/tag/{{this.name}}" class="btn btn-sm btn-outline-primary">Xem bài
+                                    viết</a>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+                {{/if}}
+                {{#if pagination}}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {{#if pagination.previous}}
+                        <li class="page-item">
+                            <a class="page-link"
+                                href="/search-results?q={{query}}&type={{type}}&page={{pagination.previous}}"
+                                aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {{else}}
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo;</span>
+                        </li>
+                        {{/if}}
+
+                        {{#each pagination.pages}}
+                        <li class="page-item {{#if this.active}}active{{/if}}">
+                            <a class="page-link"
+                                href="/search-results?q={{../query}}&type={{../type}}&page={{this.number}}">{{this.number}}</a>
+                        </li>
+                        {{/each}}
+
+                        {{#if pagination.next}}
+                        <li class="page-item">
+                            <a class="page-link"
+                                href="/search-results?q={{query}}&type={{type}}&page={{pagination.next}}"
+                                aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        {{else}}
+                        <li class="page-item disabled">
+                            <span class="page-link">&raquo;</span>
+                        </li>
+                        {{/if}}
+                    </ul>
+                </nav>
+                {{/if}}
+                {{else}}
+                <div class="alert alert-info">
+                    <h5>Không tìm thấy kết quả nào</h5>
+                    <p>Hãy thử tìm kiếm với từ khóa khác hoặc thay đổi loại tìm kiếm.</p>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('input[name="type"]').on('change', function () {
+            if ($('#searchQuery').val().trim()) {
+                $('#searchForm').submit();
+            }
+        });
+    });
+</script>

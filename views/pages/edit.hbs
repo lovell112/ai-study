@@ -1,0 +1,125 @@
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="row pb-sm-4 pt-sm-4">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">Chỉnh sửa bài viết</h4>
+                    </div>
+                    <div class="card-body">
+                        {{#unless isAuthor}}
+                        <div class="alert alert-danger">
+                            <h5>Không có quyền chỉnh sửa</h5>
+                            <p>Bạn không phải là tác giả của bài viết này.</p>
+                            <a href="/post/{{post._id}}" class="btn btn-primary">Quay lại bài viết</a>
+                        </div>
+                        {{else}}
+                        <form id="editPostForm" enctype="multipart/form-data">
+                            <input type="hidden" name="postId" value="{{post._id}}">
+                            
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Tiêu đề <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="title" name="title" value="{{post.title}}" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Danh mục <span class="text-danger">*</span></label>
+                                <select class="form-select" id="category" name="categoryId" required>
+                                    <option value="">Chọn danh mục</option>
+                                    {{#each categories}}
+                                    <option value="{{this._id}}" {{#ifEquals this._id ../post.category._id}}selected{{/ifEquals}}>{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="postContent" class="form-label">Nội dung <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="postContent" name="content" rows="10" required>{{post.content}}</textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="postTags" class="form-label">Thẻ (ngăn cách bằng dấu phẩy)</label>
+                                <select class="form-select" id="postTags" name="hashtags[]" multiple="multiple">
+                                    {{#each post.hashtags}}
+                                    <option value="{{this.name}}" selected>{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                                <div class="form-text">Nhập thẻ và nhấn Enter để thêm. Tối đa 5 thẻ.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Hình ảnh</label>
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                                
+                                <div class="mt-2" id="imagePreviewContainer">
+                                    {{#if post.image}}
+                                    <div class="current-image mb-2">
+                                        <img src="/uploads/posts/{{post.image}}" alt="Current image" class="img-thumbnail" style="max-height: 200px;">
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="removeImage" name="removeImage">
+                                        <label class="form-check-label" for="removeImage">
+                                            Xóa hình ảnh hiện tại
+                                        </label>
+                                    </div>
+                                    {{else}}
+                                    <div class="preview-image mb-2 d-none">
+                                        <img src="" alt="Image preview" class="img-thumbnail" style="max-height: 200px;">
+                                    </div>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-end">
+                                <a href="/post/{{post._id}}" class="btn btn-outline-secondary me-2">Hủy</a>
+                                <button type="submit" class="btn btn-primary" id="submitBtn">
+                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="submitSpinner"></span>
+                                    Lưu bài viết
+                                </button>
+                            </div>
+                        </form>
+                        {{/unless}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/trumbowyg@2.27.3/dist/ui/trumbowyg.min.css">
+<style>
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: #007bff;
+        border-color: #0069d9;
+        color: white;
+        padding: 0 10px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: #fff;
+        margin-right: 5px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+        color: #fff;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .select2-container .select2-search__field::placeholder {
+        color: #aaa;
+        font-style: italic;
+    }
+
+    .trumbowyg-box {
+        border: 1px solid #ddd !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .trumbowyg-button-pane {
+        background: #f8f9fa !important;
+        border-bottom: 1px solid #ddd !important;
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/trumbowyg@2.27.3/dist/trumbowyg.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

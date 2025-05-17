@@ -1,0 +1,30 @@
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-body text-center p-5">
+                    <div class="mb-4">
+                        <i class="fal fa-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+                    </div>
+                    <h1 class="display-5 mb-3">Đã xảy ra lỗi</h1>
+                    <p class="lead mb-4">{{message}}</p>
+                    
+                    {{#if error}}
+                        <div class="alert alert-danger mt-4">
+                            <pre class="mb-0">{{error}}</pre>
+                        </div>
+                    {{/if}}
+                    
+                    <div class="mt-5">
+                        <a href="/" class="btn btn-primary me-2">
+                            <i class="fal fa-home me-2"></i> Trang chủ
+                        </a>
+                        <a href="/home" type="button" class="btn btn-outline-secondary">
+                            <i class="fal fa-arrow-left me-2"></i> Quay lại
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
